@@ -7,7 +7,7 @@ Required:
 Play Framework version 2.6 implemented
 
 Steps to Run:
-1. Complete fields to configure your firebase console settings with the code in ```webpush.scala.html``` and ```firebase-messaging-sw.js```. For more information on how to do that, visit official documentation here.
+1. Complete fields to configure your firebase console settings with the code in ```webpush.scala.html``` and ```firebase-messaging-sw.js```. For more information on how to do that, visit official documentation [here](https://firebase.google.com/docs/web/setup).
 
 ```
 //In webpush.scala.html 
