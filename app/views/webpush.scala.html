@@ -1,0 +1,80 @@
+@()
+
+
+<html>
+    <title>Firebase Messaging Demo</title>
+    <style>
+            div {
+                margin-bottom: 15px;
+            }
+    </style>
+    <body>
+        <script src="https://www.gstatic.com/firebasejs/5.8.1/firebase.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase.js"></script>
+
+        <div id="msg"></div>
+        <div id="token"></div>
+        <div id="notis"></div>
+        <div id="err"></div>
+        <script>
+                MsgElem = document.getElementById("msg");
+                TokenElem = document.getElementById("token");
+                NotisElem = document.getElementById("notis");
+                ErrElem = document.getElementById("err");
+                var config = {
+                    apiKey: "AIzaSyDF-iZf7Zi6ucNevaDN2S32xdagN7FXcIc",
+                    authDomain: "play-scala-c1a88.firebaseapp.com",
+                    databaseURL: "https://play-scala-c1a88.firebaseio.com",
+                    projectId: "play-scala-c1a88",
+                    storageBucket: "play-scala-c1a88.appspot.com",
+                    messagingSenderId: "949281262581"
+                };
+                firebase.initializeApp(config);
+                const messaging = firebase.messaging();
+                messaging
+                        .requestPermission()
+                        .then(function () {
+                            MsgElem.innerHTML = "Notification permission granted."
+                            console.log("Notification permission granted.");
+
+                            // get the token in the form of promise
+                            return messaging.getToken()
+                        })
+                        .then(function(token) {
+                            TokenElem.innerHTML ="Token is: "+ token;
+
+                            $(document).ready(function(){
+                                $("button").click(function(){
+                                    $.ajax({
+                                        url: 'http://localhost:9000/getToken',
+                                        dataType: 'text',
+                                        type: 'get',
+                                        contentType: 'text/html',
+                                        data: "token="+token,
+                                        success: function (data, textStatus, jQxhr) {
+                                            $('#response pre').html(data);
+                                        },
+                                        error: function (jqXhr, textStatus, errorThrown) {
+                                            console.log(errorThrown);
+                                        }
+                                    })
+                                })
+                            })
+                            console.log("Token is: "+token)
+                        })
+
+                        .catch(function (err) {
+                            ErrElem.innerHTML =  ErrElem.innerHTML + "; " + err
+                            console.log("Unable to get permission to notify.", err);
+                        });
+                messaging.onMessage(function(payload) {
+                    console.log("Message received. ", payload);
+                    NotisElem.innerHTML = NotisElem.innerHTML + JSON.stringify(payload)
+                });
+
+        </script>
+    </body>
+    <button>SEND TOKEN TO SERVER</button>
+
+</html>
